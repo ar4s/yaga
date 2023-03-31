@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "pnpm -r run dev"
+    "test": "pnpm -r run test",
+    "dev": "pnpm -r run dev",
+    "lint": "pnpm -r run lint"
   },
   "keywords": [],
   "author": "",
