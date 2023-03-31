@@ -4,6 +4,8 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { GithubSearchDTO } from './dto/GithubSearch.dto';
+
 @Injectable()
 export class SearchService {
   private readonly logger = new Logger(SearchService.name);
@@ -20,33 +22,8 @@ export class SearchService {
     };
   }
 
-  async searchRepository(query: string) {
-    return {
-      total_count: 2,
-      incomplete_results: false,
-      items: [
-        {
-          id: 418327088,
-          node_id: 'MDU6TGFiZWw0MTgzMjcwODg=',
-          url: 'https://api.github.com/repos/octocat/linguist/labels/enhancement',
-          name: 'enhancement',
-          color: '84b6eb',
-          default: true,
-          description: 'New feature or request.',
-          score: 1,
-        },
-        {
-          id: 418327086,
-          node_id: 'MDU6TGFiZWw0MTgzMjcwODY=',
-          url: 'https://api.github.com/repos/octocat/linguist/labels/bug',
-          name: 'bug',
-          color: 'ee0701',
-          default: true,
-          description: "Something isn't working.",
-          score: 1,
-        },
-      ],
-    };
+  async searchRepository(query: string): Promise<GithubSearchDTO> {
+    this.logger.log(`Searching for ${query}`);
     const { data } = await firstValueFrom(
       this.httpService
         .get(`https://api.github.com/search/repositories?q=${query}`, {
@@ -55,7 +32,7 @@ export class SearchService {
         .pipe(
           catchError((error: any) => {
             this.logger.error(error.response.data);
-            throw new Error('Error');
+            throw new Error('Error searching for repository in GitHub');
           }),
         ),
     );

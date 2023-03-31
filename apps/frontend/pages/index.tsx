@@ -1,35 +1,50 @@
-import Head from 'next/head';
+import { useState } from 'react';
 
-export default function Home() {
+import { GetServerSideProps, NextPage } from 'next';
+
+import { SearchBar, SearchResult } from '@/components';
+import { isArray, useRepositories } from '@/utils';
+
+interface Props {
+  query: string | null;
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+  // TODO: consider to fetch repositories
+  const { query } = context.query;
+
+  if (isArray(query)) {
+    throw new Error('Multiple query is not allowed!');
+  }
+
+  return {
+    props: {
+      query: query || null,
+    },
+  };
+};
+
+const Page: NextPage<Props> = ({ query: initialQuery }) => {
+  const [query, setQuery] = useState(initialQuery);
+
   return (
     <>
-      <Head>
-        <title>YAGA</title>
-        <meta name="description" content="Yet Another Github App" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <header className="py-10">
         <div className="container mx-auto">
-          <h1 className="text-3xl font-bold">YAGA - Yet Another Github App</h1>
+          <h1 className="font-extrabold text-transparent text-5xl bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+            YAGA - Yet Another Github App
+          </h1>
         </div>
       </header>
       <main className="py-10">
         <div className="container mx-auto">
-          <form className="rounded-lg bg-white p-10 shadow-lg">
-            <div className="mb-4 flex items-center">
-              <input
-                type="text"
-                className="w-full rounded-lg border border-gray-400 p-2"
-                placeholder="tonik/theme"
-              />
-              <button className="ml-2 rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600">
-                Search
-              </button>
-            </div>
-          </form>
+          <SearchBar query={query} onSearch={setQuery} />
+          <div className="mt-10">
+            <SearchResult query={query} />
+          </div>
         </div>
       </main>
     </>
   );
-}
+};
+export default Page;
