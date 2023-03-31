@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "NEXT_PUBLIC_API_URL=http://localhost:3001/v1 next dev",
     "build": "next build",
+    "build:prod": "NEXT_PUBLIC_API_URL=https://yaga-api.source.net.pl/v1 npx @cloudflare/next-on-pages",
+    "publish": "npx wrangler pages dev .vercel/output/static",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",

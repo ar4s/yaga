@@ -5,6 +5,10 @@ import { GetServerSideProps, NextPage } from 'next';
 import { SearchBar, SearchResult } from '@/components';
 import { isArray, useRepositories } from '@/utils';
 
+export const config = {
+  runtime: 'experimental-edge',
+};
+
 interface Props {
   query: string | null;
 }
