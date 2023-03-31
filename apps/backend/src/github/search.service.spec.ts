@@ -1,4 +1,5 @@
 import { HttpModule } from '@nestjs/axios';
+import { CACHE_MANAGER } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -10,7 +11,7 @@ describe('SearchService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [HttpModule, ConfigModule],
-      providers: [SearchService],
+      providers: [SearchService, { provide: CACHE_MANAGER, useValue: {} }],
     }).compile();
 
     service = module.get<SearchService>(SearchService);

@@ -1,4 +1,5 @@
 import { HttpModule } from '@nestjs/axios';
+import { CacheModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -10,7 +11,7 @@ describe('SearchController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [HttpModule, ConfigModule],
+      imports: [HttpModule, ConfigModule, CacheModule.register()],
       controllers: [SearchController],
       providers: [SearchService],
     }).compile();
