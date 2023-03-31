@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  yaga: &yaga
+    image: "ar4s/yaga-api"
+    env_file: .env
+    restart: always
+    links:
+      - redis
+
+  api-1:
+    <<: *yaga
+    ports:
+      - "4400:3001"
+  api-2:
+    <<: *yaga
+    ports:
+      - "4401:3001"
+
+  redis:
+    image: "redis:3"
+
+volumes:
+  redis-data:
