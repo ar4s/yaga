@@ -8,7 +8,6 @@ export class SearchController {
 
   @Get()
   async search() {
-    console.log(await this.searchService.searchRepository('tonik'));
-    return 'Hello World';
+    return await this.searchService.searchRepository('tonik');
   }
 }

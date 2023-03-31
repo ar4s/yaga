@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import corsConfig from './config/cors.config';
 import githubConfig from './config/github.config';
 import { GithubModule } from './github/github.module';
 
@@ -9,7 +10,7 @@ import { GithubModule } from './github/github.module';
     GithubModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [githubConfig],
+      load: [githubConfig, corsConfig],
     }),
   ],
   providers: [],
