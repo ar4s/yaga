@@ -1,4 +1,5 @@
 import {
+  CacheInterceptor,
   ClassSerializerInterceptor,
   Controller,
   Get,
@@ -11,6 +12,7 @@ import { Search } from './entities/Search.entity';
 import { SearchService } from './search.service';
 
 @Controller('search')
+@UseInterceptors(CacheInterceptor)
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
