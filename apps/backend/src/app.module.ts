@@ -1,3 +1,5 @@
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -12,6 +14,7 @@ import { GithubModule } from './github/github.module';
       isGlobal: true,
       load: [githubConfig, corsConfig],
     }),
+    PrometheusModule.register(),
   ],
   providers: [],
 })

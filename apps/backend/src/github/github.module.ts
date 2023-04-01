@@ -1,3 +1,5 @@
+import { makeCounterProvider } from '@willsoto/nestjs-prometheus';
+
 import { HttpModule } from '@nestjs/axios';
 import { CacheModule, Module } from '@nestjs/common';
 
@@ -12,6 +14,14 @@ import { SearchService } from './search.service';
     CacheModule.register({ ttl: 600, max: 1000 }),
   ],
   controllers: [SearchController],
-  providers: [SearchService],
+  providers: [
+    SearchService,
+
+    makeCounterProvider({
+      name: 'github_search_requests',
+      help: 'Number of requests to the GitHub search API',
+      labelNames: ['status', 'query'],
+    }),
+  ],
 })
 export class GithubModule {}

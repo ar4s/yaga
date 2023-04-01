@@ -1,3 +1,6 @@
+import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { AxiosError } from 'axios';
+import { Counter } from 'prom-client';
 import { catchError, firstValueFrom } from 'rxjs';
 
 import { HttpService } from '@nestjs/axios';
@@ -10,6 +13,8 @@ import { GithubSearchDTO } from './dto/GithubSearch.dto';
 export class SearchService {
   private readonly logger = new Logger(SearchService.name);
   constructor(
+    @InjectMetric('github_search_requests')
+    private readonly metric: Counter<string>,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}
@@ -24,19 +29,20 @@ export class SearchService {
 
   async searchRepository(query: string): Promise<GithubSearchDTO> {
     this.logger.log(`Searching for ${query}`);
-    const { data } = await firstValueFrom(
+    const { data, status } = await firstValueFrom(
       this.httpService
         .get(`https://api.github.com/search/repositories?q=${query}`, {
           headers: this.requestHeaders,
         })
         .pipe(
-          catchError((error: any) => {
+          catchError((error: AxiosError) => {
             this.logger.error(error.response.data);
+            this.metric.inc({ query, staus: error.response.status });
             throw new Error('Error searching for repository in GitHub');
           }),
         ),
     );
-
+    this.metric.inc({ query, status });
     return data;
   }
 }

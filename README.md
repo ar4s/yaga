@@ -74,11 +74,14 @@ It's easy to build and run the app with docker. You can also use docker-compose 
 ## Cache with Redis
 I found some issues with the standard Redis cache manager in Nest.js, so I decided to drop this approach and implemented cache via `nginx`.
 
+# Monitoring
+There is some basic monitoring based on `prometheus` and `influx`, please go to [dashboard for more information](https://influx.source.net.pl/orgs/3a7c2facbd09c15a/dashboards/0afb3b47d1d51000?lower=now%28%29%20-%201h).
+![dashboard](./docs/dashboard.png)
+
 # TODO
 - [ ] Add more tests
 - [ ] Add logging
 - [ ] Add error handling - sentry
-- [ ] Add monitoring - prometheus
 - [ ] Add feature - latest search list
 - [ ] Add feature - sort by stars, name, etc.
 - [ ] Add feature - pagination
