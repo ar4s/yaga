@@ -32,7 +32,8 @@ The app is configured by environment variable:
  - `PORT` - port on which the app will be listening (3001 by default)
 
 # Architecture
-TODO
+
+![overview](./docs/arch.png)
 
 
 # CI/CD
