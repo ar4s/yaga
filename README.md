@@ -37,6 +37,9 @@ TODO
 
 # CI/CD
 GitHub actions are used to build and test the app.
+## Docker image
+A docker image is pushed to the Docker registry.
+You can find the latest version here: https://hub.docker.com/r/ar4s/yaga-api
 
 # Mini Architecture Decision Records
 ## Frontend and backend apps

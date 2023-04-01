@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 set -ex
 
 docker pull ar4s/yaga-api:latest
