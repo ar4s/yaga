@@ -1,22 +1,23 @@
+import { InjectSentry, SentryService } from '@ntegral/nestjs-sentry';
 import { InjectMetric } from '@willsoto/nestjs-prometheus';
 import { AxiosError } from 'axios';
 import { Counter } from 'prom-client';
 import { catchError, firstValueFrom } from 'rxjs';
 
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { GithubSearchDTO } from './dto/GithubSearch.dto';
 
 @Injectable()
 export class SearchService {
-  private readonly logger = new Logger(SearchService.name);
   constructor(
     @InjectMetric('github_search_requests')
     private readonly metric: Counter<string>,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    @InjectSentry() private readonly sentry: SentryService,
   ) {}
 
   private get requestHeaders() {
@@ -28,7 +29,7 @@ export class SearchService {
   }
 
   async searchRepository(query: string): Promise<GithubSearchDTO> {
-    this.logger.log(`Searching for ${query}`);
+    this.sentry.log(`Searching for ${query}`);
     const { data, status } = await firstValueFrom(
       this.httpService
         .get(`https://api.github.com/search/repositories?q=${query}`, {
@@ -36,7 +37,7 @@ export class SearchService {
         })
         .pipe(
           catchError((error: AxiosError) => {
-            this.logger.error(error.response.data);
+            this.sentry.error(`${error.response.data}`);
             this.metric.inc({ query, staus: error.response.status });
             throw new Error('Error searching for repository in GitHub');
           }),

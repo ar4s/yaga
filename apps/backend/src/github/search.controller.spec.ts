@@ -1,3 +1,4 @@
+import { SentryModule } from '@ntegral/nestjs-sentry';
 import { makeCounterProvider } from '@willsoto/nestjs-prometheus';
 
 import { HttpModule } from '@nestjs/axios';
@@ -13,7 +14,12 @@ describe('SearchController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [HttpModule, ConfigModule, CacheModule.register()],
+      imports: [
+        HttpModule,
+        ConfigModule,
+        CacheModule.register(),
+        SentryModule.forRoot({}),
+      ],
       controllers: [SearchController],
       providers: [
         SearchService,
