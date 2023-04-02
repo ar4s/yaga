@@ -1,18 +1,18 @@
+import { observer } from 'mobx-react';
 import React from 'react';
 
-import { useRepositories } from '@/utils';
+import { useRepositories } from '@/hooks';
 
-interface Props {
-  query: string | null;
-}
+export const SearchResult: React.FC = observer(() => {
+  const [repositories, state] = useRepositories();
 
-export const SearchResult: React.FC<Props> = ({ query }) => {
-  const repositories = useRepositories(query);
+  if (state === 'loading') {
+    return <div>Loading...</div>;
+  }
 
-  if (repositories.isLoading) return <div>Loading...</div>;
-  if (repositories.isError) return <div>Error! </div>;
-
-  console.log(repositories.data);
+  if (state === 'failed') {
+    return <div>Error!</div>;
+  }
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -34,7 +34,7 @@ export const SearchResult: React.FC<Props> = ({ query }) => {
           </tr>
         </thead>
         <tbody>
-          {repositories.data?.items.map((v) => (
+          {repositories.map((v) => (
             <tr key={v.id} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
               <th
                 scope="row"
@@ -51,4 +51,4 @@ export const SearchResult: React.FC<Props> = ({ query }) => {
       </table>
     </div>
   );
-};
+});

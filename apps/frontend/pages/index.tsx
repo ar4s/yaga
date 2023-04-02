@@ -1,9 +1,9 @@
-import { useState } from 'react';
-
 import { GetServerSideProps, NextPage } from 'next';
+import Head from 'next/head';
 
 import { SearchBar, SearchResult } from '@/components';
-import { isArray, useRepositories } from '@/utils';
+import { GithubProvider } from '@/stores';
+import { isArray } from '@/utils';
 
 export const config = {
   runtime: 'experimental-edge',
@@ -28,11 +28,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   };
 };
 
-const Page: NextPage<Props> = ({ query: initialQuery }) => {
-  const [query, setQuery] = useState(initialQuery);
-
+const Page: NextPage<Props> = ({ query }) => {
   return (
-    <>
+    <GithubProvider initialQuery={query}>
+      <Head>
+        <title>YAGA - Yet Another Github App</title>
+      </Head>
       <header className="py-10">
         <div className="container mx-auto">
           <h1 className="font-extrabold text-transparent text-5xl bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
@@ -42,13 +43,13 @@ const Page: NextPage<Props> = ({ query: initialQuery }) => {
       </header>
       <main className="py-10">
         <div className="container mx-auto">
-          <SearchBar query={query} onSearch={setQuery} />
+          <SearchBar />
           <div className="mt-10">
-            <SearchResult query={query} />
+            <SearchResult />
           </div>
         </div>
       </main>
-    </>
+    </GithubProvider>
   );
 };
 export default Page;
