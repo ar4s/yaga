@@ -28,12 +28,23 @@ export class SearchService {
     };
   }
 
-  async searchRepository(query: string): Promise<GithubSearchDTO> {
-    this.sentry.log(`Searching for ${query}`);
+  async searchRepository(
+    query: string,
+    sort?: string,
+    order?: 'desc' | 'asc',
+  ): Promise<GithubSearchDTO> {
+    const params = new URLSearchParams();
+    params.append('q', query);
+    if (sort) params.append('sort', sort);
+    if (order) params.append('order', order);
+
+    this.sentry.log(`Searching for ${params.toString()}`);
+
     const { data, status } = await firstValueFrom(
       this.httpService
-        .get(`https://api.github.com/search/repositories?q=${query}`, {
+        .get(`https://api.github.com/search/repositories`, {
           headers: this.requestHeaders,
+          params,
         })
         .pipe(
           catchError((error: AxiosError) => {

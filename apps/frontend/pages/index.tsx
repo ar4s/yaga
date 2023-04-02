@@ -2,8 +2,10 @@ import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 
 import { SearchBar, SearchResult } from '@/components';
+import { githubOrderChoices, githubSortChoices } from '@/constants';
 import { GithubProvider } from '@/stores';
-import { isArray } from '@/utils';
+import { GithubSearchOrder, GithubSearchSort, GithubSorting } from '@/types';
+import { isArray, isGithubOrderChoices, isGithubSortChoices } from '@/utils';
 
 export const config = {
   runtime: 'experimental-edge',
@@ -11,26 +13,42 @@ export const config = {
 
 interface Props {
   query: string | null;
+  sort: GithubSearchSort | null;
+  order: GithubSearchOrder | null;
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
-  // TODO: consider to fetch repositories
-  const { query } = context.query;
+  // TODO: fetch repositories
+  const { query, sort, order } = context.query;
 
   if (isArray(query)) {
     throw new Error('Multiple query is not allowed!');
   }
 
+  if (isArray(sort)) {
+    throw new Error('Multiple sort is not allowed!');
+  }
+
+  if (sort && !isGithubSortChoices(sort)) {
+    throw new Error(`Invalid sort field! Hint: use ${githubSortChoices.join(', ')}`);
+  }
+
+  if (order && !isGithubOrderChoices(order)) {
+    throw new Error(`Invalid order field! Hint: use ${githubOrderChoices.join(', ')}`);
+  }
+
   return {
     props: {
       query: query || null,
+      sort: (sort as GithubSearchSort) || null,
+      order: (order as GithubSearchOrder) || null,
     },
   };
 };
 
-const Page: NextPage<Props> = ({ query }) => {
+const Page: NextPage<Props> = ({ query, sort }) => {
   return (
-    <GithubProvider initialQuery={query}>
+    <GithubProvider initialQuery={query} initialSort={sort}>
       <Head>
         <title>YAGA - Yet Another Github App</title>
       </Head>

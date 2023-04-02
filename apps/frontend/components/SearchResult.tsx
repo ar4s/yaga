@@ -1,14 +1,11 @@
 import { observer } from 'mobx-react';
 import React from 'react';
 
+import { GithubSort } from './GithubSort';
 import { useRepositories } from '@/hooks';
 
 export const SearchResult: React.FC = observer(() => {
   const [repositories, state] = useRepositories();
-
-  if (state === 'loading') {
-    return <div>Loading...</div>;
-  }
 
   if (state === 'failed') {
     return <div>Error!</div>;
@@ -26,7 +23,7 @@ export const SearchResult: React.FC = observer(() => {
               Owner
             </th>
             <th scope="col" className="px-6 py-3">
-              Stars
+              Stars <GithubSort field="stars" />
             </th>
             <th scope="col" className="px-6 py-3">
               Created at
@@ -34,19 +31,27 @@ export const SearchResult: React.FC = observer(() => {
           </tr>
         </thead>
         <tbody>
-          {repositories.map((v) => (
-            <tr key={v.id} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                {v.name}
-              </th>
-              <td className="px-6 py-4">{v.owner}</td>
-              <td className="px-6 py-4">{v.stars}</td>
-              <td className="px-6 py-4">{v.created_at}</td>
+          {state === 'loading' && (
+            <tr>
+              <td colSpan={4} className="px-6 py-4">
+                Loading...
+              </td>
             </tr>
-          ))}
+          )}
+          {state === 'succeeded' &&
+            repositories.map((v) => (
+              <tr key={v.id} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  {v.name}
+                </th>
+                <td className="px-6 py-4">{v.owner}</td>
+                <td className="px-6 py-4">{v.stars}</td>
+                <td className="px-6 py-4">{v.created_at}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

@@ -18,8 +18,16 @@ export class SearchController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  async search(@Query('query') query: string): Promise<Search> {
-    const response = await this.searchService.searchRepository(query);
+  async search(
+    @Query('query') query: string,
+    @Query('field') field?: string,
+    @Query('order') order?: 'asc' | 'desc',
+  ): Promise<Search> {
+    const response = await this.searchService.searchRepository(
+      query,
+      field,
+      order,
+    );
     return new Search({
       items: response.items.map((item) => new Repository(item)),
       total_count: response.total_count,
