@@ -91,7 +91,7 @@ I used Sentry to log errors on backend side.
 - [ ] Add more tests
 - [ ] Add feature - logging frontend errors to Sentry
 - [ ] Add feature - latest search list
-- [ ] Add feature - sort by stars, name, etc.
+- [ ] Add feature - sort by name, etc.
 - [ ] Add feature - pagination
 - [ ] Add feature - dark mode
 - [ ] Add syntehic tests results to README.md - lighthouse (front) and wrk2 (back)
