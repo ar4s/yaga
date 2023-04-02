@@ -16,7 +16,11 @@ import { GithubModule } from './github/github.module';
       isGlobal: true,
       load: [githubConfig, corsConfig, sentryConfig],
     }),
-    PrometheusModule.register(),
+    PrometheusModule.register({
+      defaultLabels: {
+        host: process.env.HOSTNAME,
+      },
+    }),
     SentryModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (cfg: ConfigService) => ({
